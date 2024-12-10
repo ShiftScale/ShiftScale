@@ -312,49 +312,60 @@
     </footer>
   </main>
 
-  <script>
-    function convertNumber() {
-      const numberInput = document.getElementById('numberInput').value.trim();
-      const fromBase = document.getElementById('fromBase').value;
-      const toBase = document.getElementById('toBase').value;
+<script>
+  function convertNumber() {
+    const numberInput = document.getElementById('numberInput').value.trim();
+    const fromBase = document.getElementById('fromBase').value;
+    const toBase = document.getElementById('toBase').value;
 
-      if (!numberInput) {
-        alert("Please enter a number.");
-        return;
-      }
-
-      let numberInDecimal;
-      // Convert input number to decimal based on the selected base
-      if (fromBase === 'decimal') {
-        numberInDecimal = parseInt(numberInput, 10);
-      } else if (fromBase === 'binary') {
-        numberInDecimal = parseInt(numberInput, 2);
-      } else if (fromBase === 'hexadecimal') {
-        numberInDecimal = parseInt(numberInput, 16);
-      } else if (fromBase === 'octal') {
-        numberInDecimal = parseInt(numberInput, 8);
-      }
-
-      if (isNaN(numberInDecimal)) {
-        alert("Invalid number format for the selected base.");
-        return;
-      }
-
-      let convertedNumber;
-      // Convert decimal to the target base
-      if (toBase === 'decimal') {
-        convertedNumber = numberInDecimal.toString(10);
-      } else if (toBase === 'binary') {
-        convertedNumber = numberInDecimal.toString(2);
-      } else if (toBase === 'hexadecimal') {
-        convertedNumber = numberInDecimal.toString(16).toUpperCase();
-      } else if (toBase === 'octal') {
-        convertedNumber = numberInDecimal.toString(8);
-      }
-
-      document.getElementById('result').textContent = `Converted number: ${convertedNumber}`;
-      
+    if (!numberInput) {
+      alert("Please enter a number.");
+      return;
     }
-  </script>
+
+    let numberInDecimal;
+    // Convert input number to decimal based on the selected base
+    if (fromBase === 'decimal') {
+      numberInDecimal = parseInt(numberInput, 10);
+    } else if (fromBase === 'binary') {
+      numberInDecimal = parseInt(numberInput, 2);
+    } else if (fromBase === 'hexadecimal') {
+      numberInDecimal = parseInt(numberInput, 16);
+    } else if (fromBase === 'octal') {
+      numberInDecimal = parseInt(numberInput, 8);
+    }
+
+    if (isNaN(numberInDecimal)) {
+      alert("Invalid number format for the selected base.");
+      return;
+    }
+
+    let convertedNumber = '';
+    const targetBase = toBase === 'binary' ? 2 :
+                       toBase === 'octal' ? 8 :
+                       toBase === 'hexadecimal' ? 16 : 10;
+
+    // Manually convert the decimal number to the target base
+    if (targetBase === 10) {
+      convertedNumber = numberInDecimal.toString();
+    } else {
+      let tempDecimal = numberInDecimal;
+      const digits = '0123456789ABCDEF';
+
+      while (tempDecimal > 0) {
+        const remainder = tempDecimal % targetBase;
+        convertedNumber = digits[remainder] + convertedNumber;
+        tempDecimal = Math.floor(tempDecimal / targetBase);
+      }
+
+      if (convertedNumber === '') {
+        convertedNumber = '0';
+      }
+    }
+
+    document.getElementById('result').textContent = `Converted number: ${convertedNumber}`;
+  }
+</script>
+
 </body>
 </html>
